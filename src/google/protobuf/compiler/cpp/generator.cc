@@ -161,6 +161,18 @@ bool CppGenerator::Generate(const FileDescriptor* file,
     } else if (key == "proto_static_reflection_h") {
     } else if (key == "annotate_accessor") {
       file_options.annotate_accessor = true;
+    } else if (key == "protos_for_field_listener_events") {
+      std::size_t pos = 0;
+      do {
+        std::size_t next_pos = value.find_first_of("+", pos);
+        if (next_pos == std::string::npos) {
+          next_pos = value.size();
+        }
+        if (next_pos > pos && value.substr(pos, next_pos - pos) == file->name())
+          file_options.field_listener_options.inject_field_listener_events =
+              true;
+        pos = next_pos + 1;
+      } while (pos < value.size());
     } else if (key == "inject_field_listener_events") {
       file_options.field_listener_options.inject_field_listener_events = true;
     } else if (key == "forbidden_field_listener_events") {
